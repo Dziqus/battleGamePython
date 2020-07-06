@@ -1,0 +1,4 @@
+Chose your warrior class:
+[1] Berserker
+[2] Tank
+[3] Wizzard

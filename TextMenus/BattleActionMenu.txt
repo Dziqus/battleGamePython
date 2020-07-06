@@ -1,0 +1,8 @@
+
+================================
+warriorName choose what you want to do:
+[1] Attack
+[2] Block
+[3] Heal Potion
+[4] Skills
+================================

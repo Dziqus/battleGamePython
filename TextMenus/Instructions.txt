@@ -1,0 +1,10 @@
+=========================================
+This is a tour based gameplay.
+The goal is to kill the other players warrior.
+At the beggining you choose name of the warrior and class.
+Than the game begins and you can choose what to do.
+You have 3 Health potions. You can also atack and block.
+Attack and Block increases its value by 10.
+HAVE FUN!
+=========================================
+press enter key to continue...
