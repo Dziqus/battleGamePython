@@ -1,7 +1,9 @@
 from pathlib import Path
-from os import system
 from enum import Enum
 from pprint import pprint
+import os
+
+rows, columns = os.popen('stty size', 'r').read().split()
 
 class UiMaker:
 
@@ -16,7 +18,7 @@ class UiMaker:
     def printMenuChose(cls):
         cls.printFile("MainMenu.txt")
         option = input()
-        system('clear')
+        os.system('clear')
         cls.menuChose(int(option))
 
     @classmethod
@@ -30,7 +32,7 @@ class UiMaker:
         elif option == 4:
             cls.printFile("ClassStats.txt")
         input()
-        system('clear')
+        os.system('clear')
         cls.printMenuChose()
 
 class BattleGame:
@@ -40,17 +42,17 @@ class BattleGame:
         print("Name the first warrior:")
         warrior1 = Warrior(input())
         UiMaker.printFile("ClassChooser.txt")
-        warrior1.choseClass(input())
-        print(warrior1.Health)
-        print(warrior1.Name)
-        print(warrior1.ClassName)
+        warrior1.choseClass(int(input()))
 
     @staticmethod
     def printHomeScreen():
-        system('clear')
-        UiMaker.printFile("HomeScreen.txt")
+        os.system('clear')
+        if int(columns) < 80:
+            UiMaker.printFile("HomeScreenSmall.txt")
+        else:
+            UiMaker.printFile("HomeScreen.txt")
         input()
-        system('clear')
+        os.system('clear')
         UiMaker.printMenuChose()
 
 class Warrior:
@@ -64,24 +66,24 @@ class Warrior:
         self.ClassName = className
 
     def choseClass(self, className):
-        if className == WarriorClasses.BERSERKER:
+        if className == 1:
             self.Health = 1000
             self.AttkMax = 140
             self.BlckMax = 30
             self.Mana = 30
-            self.ClassName = WarriorClasses.BERSERKER
-        elif className == WarriorClasses.TANK:
+            self.ClassName = WarriorClasses(1).name
+        elif className == 2:
             self.Health = 1200
             self.AttkMax = 100
             self.BlckMax = 60
             self.Mana = 20
-            self.ClassName = WarriorClasses.TANK
-        elif className == WarriorClasses.WIZARD:
+            self.ClassName = WarriorClasses(2).name
+        elif className == 3:
             self.Health = 700
             self.AttkMax = 200
             self.BlckMax = 20
             self.Mana = 50
-            self.ClassName = WarriorClasses.WIZARD
+            self.ClassName = WarriorClasses(3).name
 
 class WarriorClasses(Enum):
     BERSERKER = 1
