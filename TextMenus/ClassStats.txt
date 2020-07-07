@@ -1,5 +1,5 @@
 ======================================
-Statistics: Berserker  Tank  Wizzard
+Statistics: Berserker  Tank  Wizard
 Health:       1000     1200    700  
 Max Attack:   140      100     200  
 Max Defense:  30       60      20
