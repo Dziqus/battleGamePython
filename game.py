@@ -37,13 +37,6 @@ class UiMaker:
 
 class BattleGame:
 
-    @classmethod
-    def startGame(cls):
-        print("Name the first warrior:")
-        warrior1 = Warrior(input())
-        UiMaker.printFile("ClassChooser.txt")
-        warrior1.choseClass(int(input()))
-
     @staticmethod
     def printHomeScreen():
         os.system('clear')
@@ -54,6 +47,13 @@ class BattleGame:
         input()
         os.system('clear')
         UiMaker.printMenuChose()
+        
+    @classmethod
+    def startGame(cls):
+        print("Name the first warrior:")
+        warrior1 = Warrior(input())
+        UiMaker.printFile("ClassChooser.txt")
+        warrior1.choseClass(int(input()))
 
 class Warrior:
     
