@@ -119,26 +119,26 @@ class BattleGame:
     @classmethod
     def startFight(cls, warrior1 : Warrior, warrior2 : Warrior):
         while warrior1.Health > 0 and warrior2.Health > 0 :
-            
-            cls.getActionResult(warrior1, warrior2)
-
-            if warrior1.Health < 0:
-                print(warrior2.Name + " won with " + str(warrior2.Health) + " health left")
+            if cls.checkForWinner(warrior1, warrior2):
                 break
-            elif warrior2.Health < 0:
-                print(warrior1.Name + " won with " + str(warrior1.Health) + " health left")
+            if cls.checkForWinner(warrior2, warrior1):
                 break
-
-            cls.getActionResult(warrior2, warrior1)
-
-            if warrior1.Health < 0:
-                print(warrior2.Name + " won with " + str(warrior2.Health) + " health left")
-                break
-            elif warrior2.Health < 0:
-                print(warrior1.Name + " won with " + str(warrior1.Health) + " health left")
-                break
-
+        input()
         cls.printHomeScreen()
+
+    @classmethod
+    def checkForWinner(cls, warrior1, warrior2):
+        cls.getActionResult(warrior1, warrior2)
+        if warrior1.Health < 0:
+            cls.printWinner(warrior2)
+            return True
+        elif warrior2.Health < 0:
+            cls.printWinner(warrior1)
+            return True
+
+    @classmethod
+    def printWinner(cls, winner):
+        print(winner.Name + " won with " + str(winner.Health) + " health left")
 
     @classmethod
     def getActionResult(cls, warrior1, warrior2):
