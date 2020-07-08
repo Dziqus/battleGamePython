@@ -82,10 +82,6 @@ class WarriorClasses(Enum):
     TANK = 2
     WIZARD = 3
 
-def main():
-    btgm = BattleGame()
-    btgm.printHomeScreen()
-
 class BattleGame:
 
     @staticmethod
@@ -123,36 +119,8 @@ class BattleGame:
     @classmethod
     def startFight(cls, warrior1 : Warrior, warrior2 : Warrior):
         while warrior1.Health > 0 and warrior2.Health > 0 :
-            print(UiMaker.getFileContent("BattleActionMenu.txt").replace("warriorName", warrior1.Name))
-            action = int(input())
-            if action == 1:
-                attack1 = random.randrange(0,warrior1.AttkMax) + 10
-                defense1 = random.randrange(0, warrior1.BlckMax)
-            elif action == 2:
-                attack1 = random.randrange(0,warrior1.AttkMax) 
-                defense1 = random.randrange(0, warrior1.BlckMax) + 10
-
-            attackDamage = attack1 - random.randrange(warrior2.BlckMax)
-            if attackDamage <= 0:
-                print("Warrior "+warrior2.Name+" blocked the attack!")
-                time.sleep(1)
-            else:
-                print("Warrior " + warrior1.Name + " did " + str(attackDamage) + " damage to " + warrior2.Name)
-                warrior2.Health -= attackDamage
-                time.sleep(1)
-
-            counterDamage = random.randrange(0,warrior2.AttkMax) - defense1
-            if counterDamage <= 0:
-                print("Warrior "+warrior1.Name+" blocked the attack!")
-                time.sleep(1)
-            else:
-                print("Warrior " + warrior2.Name + " did " + str(counterDamage) + " damage to " + warrior1.Name)
-                warrior1.Health -= counterDamage
-                time.sleep(1)
-
-            print(warrior2.Name + " has " + str(warrior2.Health) + " health left")
-            print(warrior1.Name + " has " + str(warrior1.Health) + " health left")
-            time.sleep(1)
+            
+            cls.getActionResult(warrior1, warrior2)
 
             if warrior1.Health < 0:
                 print(warrior2.Name + " won with " + str(warrior2.Health) + " health left")
@@ -161,36 +129,7 @@ class BattleGame:
                 print(warrior1.Name + " won with " + str(warrior1.Health) + " health left")
                 break
 
-            print(UiMaker.getFileContent("BattleActionMenu.txt").replace("warriorName", warrior2.Name))
-            action = int(input())
-            if action == 1:
-                attack2 = random.randrange(0,warrior2.AttkMax) + 10
-                defense2 = random.randrange(0, warrior2.BlckMax)
-            elif action == 2:
-                attack2 = random.randrange(0,warrior2.AttkMax)
-                defense2 = random.randrange(0, warrior2.BlckMax) + 10
-
-            attackDamage = attack2 - random.randrange(warrior1.BlckMax)
-            if attackDamage <= 0:
-                print("Warrior "+warrior1.Name+" blocked the attack!")
-                time.sleep(1)
-            else:
-                print("Warrior " + warrior2.Name + " did " + str(attackDamage) + " damage to " + warrior1.Name)
-                warrior1.Health -= attackDamage
-                time.sleep(1)
-
-            counterDamage = random.randrange(0,warrior1.AttkMax) - defense2
-            if counterDamage <= 0:
-                print("Warrior "+warrior2.Name+" blocked the attack!")
-                time.sleep(1)
-            else:
-                print("Warrior " + warrior1.Name + " did " + str(counterDamage) + " to " + warrior2.Name)
-                warrior2.Health -= counterDamage
-                time.sleep(1)
-
-            print(warrior1.Name + " has " + str(warrior1.Health) + " health left")
-            print(warrior2.Name + " has " + str(warrior2.Health) + " health left")
-            time.sleep(1)
+            cls.getActionResult(warrior2, warrior1)
 
             if warrior1.Health < 0:
                 print(warrior2.Name + " won with " + str(warrior2.Health) + " health left")
@@ -202,19 +141,39 @@ class BattleGame:
         cls.printHomeScreen()
 
     @classmethod
-    def action(cls, warrior1: Warrior, warrior2: Warrior):
+    def getActionResult(cls, warrior1, warrior2):
         print(UiMaker.getFileContent("BattleActionMenu.txt").replace("warriorName", warrior1.Name))
-        action = input()
+        action = int(input())
+        buffBonus = 20
+        if action == 1:
+            attack = random.randrange(0,warrior1.AttkMax) + buffBonus
+            defense = random.randrange(0, warrior1.BlckMax)
+        elif action == 2:
+            attack = random.randrange(0,warrior1.AttkMax) 
+            defense = random.randrange(0, warrior1.BlckMax) + buffBonus
 
+        attackDamage = attack - random.randrange(warrior2.BlckMax)
+        cls.calculateDamage(warrior1, warrior2, attackDamage)
+
+        counterDamage = random.randrange(0,warrior2.AttkMax) - defense
+        cls.calculateDamage(warrior2, warrior1, counterDamage)
+
+        print(warrior2.Name + " has " + str(warrior2.Health) + " health left")
+        print(warrior1.Name + " has " + str(warrior1.Health) + " health left")
+        time.sleep(1)
 
     @classmethod
-    def damageCalculator(cls):
-        print()
-
-    @classmethod
-    def getAttackResult(cls):
-        print()
-
+    def calculateDamage(cls, warrior1, warrior2, damage):
+        if damage <= 0:
+            print("Warrior "+warrior2.Name+" blocked the attack!")
+            time.sleep(1)
+        else:
+            print("Warrior " + warrior1.Name + " did " + str(damage) + " damage to " + warrior2.Name)
+            warrior2.Health -= damage
+            time.sleep(1)
+def main():
+    btgm = BattleGame()
+    btgm.printHomeScreen()
 
 if __name__ == "__main__":
     main()
