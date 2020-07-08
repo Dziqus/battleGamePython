@@ -1,8 +1,9 @@
 from pathlib import Path
 from enum import Enum
 from pprint import pprint
-import os
 import random
+import time
+import os
 
 rows, columns = os.popen('stty size', 'r').read().split()
 
@@ -112,13 +113,12 @@ class BattleGame:
         cls.checkWarriorName(warrior1, warrior2)
         cls.startFight(warrior1, warrior2)
 
-
     @classmethod
     def checkWarriorName(cls, warrior1, warrior2):
-        if warrior1.Name == warrior2.Name :
+        if warrior1.Name == warrior2.Name:
             warrior1.Name += "1"
             warrior2.Name += "2"
-            print("Unfortunately warriors names are the same so we changed it to " + warrior1.Name + " and " + warrior2.name)
+            print("Unfortunately warriors names are the same so we changed it to " + warrior1.Name + " and " + warrior2.Name)
 
     @classmethod
     def startFight(cls, warrior1 : Warrior, warrior2 : Warrior):
@@ -133,11 +133,33 @@ class BattleGame:
                 defense1 = random.randrange(0, warrior1.BlckMax) + 10
 
             attackDamage = attack1 - random.randrange(warrior2.BlckMax)
+            if attackDamage <= 0:
+                print("Warrior "+warrior2.Name+" blocked the attack!")
+                time.sleep(1)
+            else:
+                print("Warrior " + warrior1.Name + " did " + str(attackDamage) + " damage to " + warrior2.Name)
+                warrior2.Health -= attackDamage
+                time.sleep(1)
+
             counterDamage = random.randrange(0,warrior2.AttkMax) - defense1
-            warrior2.Health -= attackDamage
-            warrior1.Health -= counterDamage
+            if counterDamage <= 0:
+                print("Warrior "+warrior1.Name+" blocked the attack!")
+                time.sleep(1)
+            else:
+                print("Warrior " + warrior2.Name + " did " + str(counterDamage) + " damage to " + warrior1.Name)
+                warrior1.Health -= counterDamage
+                time.sleep(1)
+
             print(warrior2.Name + " has " + str(warrior2.Health) + " health left")
             print(warrior1.Name + " has " + str(warrior1.Health) + " health left")
+            time.sleep(1)
+
+            if warrior1.Health < 0:
+                print(warrior2.Name + " won with " + str(warrior2.Health) + " health left")
+                break
+            elif warrior2.Health < 0:
+                print(warrior1.Name + " won with " + str(warrior1.Health) + " health left")
+                break
 
             print(UiMaker.getFileContent("BattleActionMenu.txt").replace("warriorName", warrior2.Name))
             action = int(input())
@@ -149,13 +171,35 @@ class BattleGame:
                 defense2 = random.randrange(0, warrior2.BlckMax) + 10
 
             attackDamage = attack2 - random.randrange(warrior1.BlckMax)
+            if attackDamage <= 0:
+                print("Warrior "+warrior1.Name+" blocked the attack!")
+                time.sleep(1)
+            else:
+                print("Warrior " + warrior2.Name + " did " + str(attackDamage) + " damage to " + warrior1.Name)
+                warrior1.Health -= attackDamage
+                time.sleep(1)
+
             counterDamage = random.randrange(0,warrior1.AttkMax) - defense2
-            warrior1.Health -= attackDamage
-            warrior2.Health -= counterDamage
+            if counterDamage <= 0:
+                print("Warrior "+warrior2.Name+" blocked the attack!")
+                time.sleep(1)
+            else:
+                print("Warrior " + warrior1.Name + " did " + str(counterDamage) + " to " + warrior2.Name)
+                warrior2.Health -= counterDamage
+                time.sleep(1)
+
             print(warrior1.Name + " has " + str(warrior1.Health) + " health left")
             print(warrior2.Name + " has " + str(warrior2.Health) + " health left")
+            time.sleep(1)
 
-        print("finished")
+            if warrior1.Health < 0:
+                print(warrior2.Name + " won with " + str(warrior2.Health) + " health left")
+                break
+            elif warrior2.Health < 0:
+                print(warrior1.Name + " won with " + str(warrior1.Health) + " health left")
+                break
+
+        cls.printHomeScreen()
 
     @classmethod
     def action(cls, warrior1: Warrior, warrior2: Warrior):
