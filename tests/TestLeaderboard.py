@@ -49,5 +49,21 @@ class TestLeaderboard(unittest.TestCase):
         leaderboard = self.createDefaultLeaderboard()
         self.assertEqual(leaderboard.getUserById(2).name, leaderboard.userList[1].name)
 
+    def testChangeUserData(self):
+        leaderboard = self.createDefaultLeaderboard()
+        self.assertEqual(leaderboard.getUserById(1).wins, 4)
+        leaderboard.getUserById(1).wins += 1
+        self.assertEqual(leaderboard.getUserById(1).wins, 5)
+
+    def testOverwriteJsonFile(self):
+        leaderboard = self.createDefaultLeaderboard()
+        self.assertEqual(leaderboard.getUserById(1).wins, 4)
+        leaderboard.getUserById(1).wins += 1
+        leaderboard.saveData(Path("tests"))
+        leaderboard2 = Leaderboard.Leaderboard()
+        leaderboard2.loadData(Path("tests"))
+        self.assertEqual(leaderboard2.getUserById(1).wins, 5)
+
+
 if __name__ == '__main__':
     unittest.main()

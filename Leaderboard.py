@@ -33,7 +33,7 @@ class Leaderboard:
     def saveData(self, path=None):
         fullPath = "leaderboard.json" if path is None else path/"leaderboard.json"
         file = open(fullPath, "w")
-        charactersWritten = file.write(self.dumpData())
+        file.write(self.dumpData())
         file.close()
 
     @staticmethod
