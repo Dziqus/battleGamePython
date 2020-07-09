@@ -5,10 +5,9 @@ import random
 import time
 import os
 
-rows, columns = os.popen('stty size', 'r').read().split()
+ROWS, COLUMNS = os.popen('stty size', 'r').read().split()
 
 class UiMaker:
-
     textMenus = Path("./TextMenus/")
 
     @classmethod
@@ -48,7 +47,6 @@ class UiMaker:
         cls.printFile("ClassChooser.txt")
 
 class Warrior:
-    
     def __init__(self, name, health=1, attkMax=1, blckMax=1, mana=1, className=1):
         self.Name = name
         self.Health = health
@@ -87,7 +85,7 @@ class BattleGame:
     @staticmethod
     def printHomeScreen():
         os.system('clear')
-        if int(columns) < 80:
+        if int(COLUMNS) < 80:
             UiMaker.printFile("HomeScreenSmall.txt")
         else:
             UiMaker.printFile("HomeScreen.txt")
