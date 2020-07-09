@@ -8,9 +8,8 @@ Leaderboard = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(Leaderboard)
 
 class TestLeaderboard(unittest.TestCase):
-
-    def test1(self):
-        user1 = Leaderboard.User(1, "jack", 10,10)
+    def createDefaultLeaderboard(self):
+        user1 = Leaderboard.User(1, "jack", 4,10)
         user2 = Leaderboard.User(2, "marsh", 9 ,11)
         user3 = Leaderboard.User(3, "zak", 2, 2)
 
@@ -19,15 +18,36 @@ class TestLeaderboard(unittest.TestCase):
         leaderboard.addUserToLeaderBoard(user1)
         leaderboard.addUserToLeaderBoard(user2)
         leaderboard.addUserToLeaderBoard(user3)
+        return leaderboard
+        
+    def testLeaderboardDump(self):
 
+        leaderboard = self.createDefaultLeaderboard()
         jsonStr = leaderboard.dumpData()
 
         leaderboardTest = Leaderboard.Leaderboard()
-        leaderboardTest.loadData(jsonStr)
-
-        leaderboardTest.saveData()
+        leaderboardTest.loadDataWithJson(jsonStr)
 
         self.assertEqual(leaderboardTest.userList[1].name ,leaderboard.userList[1].name)
+
+    def testSavingAndReadingFromFile(self):
+        
+        leaderboard = self.createDefaultLeaderboard()
+        self.assertEqual(leaderboard.userList[1].name, "marsh")
+        leaderboard.saveData(Path("tests"))
+
+        leaderboard2 = Leaderboard.Leaderboard()
+        
+        self.assertEqual(len(leaderboard2.userList), 0)
+
+        leaderboard2.loadData(Path("tests"))
+
+        self.assertGreater(len(leaderboard2.userList), 0)
+        self.assertEqual(leaderboard2.userList[1].name, "marsh")
+
+    def testGetUserById(self):
+        leaderboard = self.createDefaultLeaderboard()
+        self.assertEqual(leaderboard.getUserById(2).name, leaderboard.userList[1].name)
 
 if __name__ == '__main__':
     unittest.main()

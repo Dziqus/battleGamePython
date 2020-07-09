@@ -1,3 +1,4 @@
+from pathlib import Path
 import json
 
 class Leaderboard:
@@ -6,11 +7,12 @@ class Leaderboard:
             self.userList = []
         else:
             self.userList = userList
+            
+    def sortUserListByWins(self):
+        self.userList.sort(key=lambda user: user.wins, reverse=True)
 
-    @classmethod
-    def readLeaderboard(cls):
-        with open("leaderboard.json","r") as json_file:
-            return json.load(json_file)
+    def getUserById(self, id):
+        return next((user for user in self.userList if user.id == id), None)
 
     def addUserToLeaderBoard(self, user):
         self.userList.append(user)
@@ -18,12 +20,19 @@ class Leaderboard:
     def dumpData(self):
         return json.dumps([user.dump() for user in self.userList], indent=4)
 
+    # loads user data from default file path or 
+    def loadData(self, path=None):
+        fullPath = "leaderboard.json" if path is None else path/"leaderboard.json"
+        with open(fullPath,"r") as json_file:
+            self.userList = [self.__getUserFromJson(user) for user in json.loads(json_file.read())]
+
     # sets objects userList from users that are found in a json string 
-    def loadData(self, jsonStr):
+    def loadDataWithJson(self, jsonStr):
         self.userList = [self.__getUserFromJson(user) for user in json.loads(jsonStr)]
 
-    def saveData(self):
-        file = open("leaderboard.json", "w")
+    def saveData(self, path=None):
+        fullPath = "leaderboard.json" if path is None else path/"leaderboard.json"
+        file = open(fullPath, "w")
         charactersWritten = file.write(self.dumpData())
         file.close()
 
